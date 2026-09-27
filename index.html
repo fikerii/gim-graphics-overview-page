@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Peta kode graphics — GIM</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23096b70'/%3E%3Cpath d='M12 35 25 22l9 9 16-16' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg:#f5f8f7; --paper:#ffffff; --soft:#edf4f3; --ink:#183038;
+      --muted:#5b7177; --line:#d6e2e2; --teal:#096b70; --teal-soft:#e3f2ef;
+      --gold:#a7660d; --gold-soft:#fff2d9; --green:#2d7253; --green-soft:#e5f3eb;
+      --blue:#315d85; --blue-soft:#e8f1fa; --red:#a3433b; --red-soft:#fbebe8;
+      --shadow:0 16px 40px rgba(29,64,65,.07);
+      --sans:"Trebuchet MS","Segoe UI",sans-serif;
+      --serif:Cambria,Georgia,serif;
+      --mono:Consolas,"Courier New",monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--bg);font:16px/1.6 var(--sans)}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.32;background-image:linear-gradient(#d9e7e6 1px,transparent 1px),linear-gradient(90deg,#d9e7e6 1px,transparent 1px);background-size:32px 32px;z-index:-1}
+    a{color:var(--teal)}
+    a:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    .layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:42px;padding:26px 34px 80px}
+    .toc{position:sticky;top:20px;align-self:start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 14px;box-shadow:var(--shadow)}
+    .toc strong{display:block;font:700 11px var(--mono);letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin:0 12px 12px}
+    .toc a{display:block;padding:8px 12px;color:var(--muted);text-decoration:none;border-radius:7px;font-size:13px;line-height:1.3}
+    .toc a:hover,.toc a:focus-visible{background:var(--teal-soft);color:var(--teal)}
+    main{min-width:0}
+    section{scroll-margin-top:28px;margin-top:48px}
+    .hero{margin-top:0;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:16px;padding:44px 48px;box-shadow:var(--shadow)}
+    .eyebrow{font:700 11px var(--mono);color:var(--teal);letter-spacing:.16em;text-transform:uppercase}
+    h1,h2,h3,p{margin-top:0}
+    h1{font:700 clamp(2.35rem,5vw,4.3rem)/1.07 var(--serif);letter-spacing:-.035em;max-width:850px;margin:16px 0 20px;text-wrap:balance}
+    h2{font:700 clamp(1.75rem,3vw,2.35rem)/1.15 var(--serif);letter-spacing:-.02em;margin-bottom:10px;text-wrap:balance}
+    h3{font:700 1.12rem/1.3 var(--sans);margin-bottom:8px}
+    .lead{font-size:1.15rem;line-height:1.55;max-width:68ch;color:#36535a}
+    .note{color:var(--muted);max-width:75ch}
+    .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+    .fact{background:var(--soft);border:1px solid var(--line);padding:8px 12px;border-radius:7px;font-size:13px}
+    .fact b{font-family:var(--mono);color:var(--teal);font-size:15px}
+    .section-head{display:flex;gap:16px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:20px}
+    .section-num{font:700 12px var(--mono);color:var(--teal)}
+    .section-head h2{margin:0}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 5px 18px rgba(29,64,65,.035);min-width:0}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .code-card{background:#17333a;color:#eaf5f3;border-radius:12px;padding:20px;overflow:auto}
+    pre{margin:0;white-space:pre-wrap;font:13px/1.65 var(--mono)}
+    code{font-family:var(--mono);font-size:.9em;background:var(--soft);padding:.12em .3em;border-radius:4px}
+    .code-card code{background:none;padding:0;color:inherit}
+    .term{border-left:3px solid var(--teal);padding:3px 0 3px 12px;margin:0 0 11px}
+    .term:last-child{margin-bottom:0}
+    .term b{font-family:var(--mono);color:var(--teal)}
+    .term span{display:block;color:var(--muted);font-size:13px}
+    .tag{display:inline-block;font:700 10px var(--mono);letter-spacing:.03em;text-transform:uppercase;padding:4px 7px;border-radius:5px;white-space:nowrap}
+    .tag.api{background:var(--teal-soft);color:var(--teal)}
+    .tag.impl{background:var(--blue-soft);color:var(--blue)}
+    .tag.support{background:var(--gold-soft);color:var(--gold)}
+    .tag.test{background:var(--green-soft);color:var(--green)}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+    table{border-collapse:collapse;width:100%;min-width:680px}
+    th,td{text-align:left;padding:11px 14px;vertical-align:top;border-bottom:1px solid var(--line)}
+    th{background:var(--soft);font:700 11px var(--mono);letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+    tr:last-child td{border-bottom:0}
+    td:first-child{width:255px;font:600 12px/1.5 var(--mono);color:var(--ink);overflow-wrap:anywhere}
+    td:nth-child(2){width:110px}
+    td:last-child{font-size:13px;color:#36535a}
+    .group-title{font:700 13px var(--mono);color:var(--teal);margin:24px 0 10px}
+    .group-title:first-child{margin-top:0}
+    .mini{font-size:13px;color:var(--muted)}
+    .flow{max-width:870px;margin:auto;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:30px;box-shadow:var(--shadow)}
+    .flow figcaption{font-size:13px;color:var(--muted);text-align:center;margin-bottom:23px}
+    .flow-step{max-width:630px;margin:auto;border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:9px;padding:13px 17px;background:#fff}
+    .flow-step.external{border-style:dashed;border-left-style:solid;border-left-color:var(--gold);background:#fffaf0}
+    .flow-step.gpu{border-left-color:var(--blue);background:#f5f9fd}
+    .flow-step.finish{border-left-color:var(--green)}
+    .flow-step b{display:block;font-size:15px}
+    .flow-step small{display:block;color:var(--muted);line-height:1.45;margin-top:3px}
+    .arrow{height:29px;display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:22px;line-height:1}
+    .fork{display:grid;grid-template-columns:1fr 1fr;gap:13px;max-width:630px;margin:auto}
+    .branch{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--soft);font-size:13px}
+    .branch b{display:block;color:var(--teal);margin-bottom:3px}
+    .branch small{color:var(--muted)}
+    .loop{max-width:630px;margin:14px auto 0;background:var(--teal-soft);border:1px solid #b9d9d6;border-radius:8px;padding:9px 14px;color:var(--teal);font-weight:700;font-size:13px;text-align:center}
+    .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .legend .card{padding:14px 17px;font-size:13px}
+    .kpi{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:28px}
+    .dial{height:200px;width:200px;border-radius:50%;background:conic-gradient(var(--teal) 0deg 54deg,var(--soft) 54deg 360deg);display:grid;place-items:center;margin:auto}
+    .dial-inner{height:155px;width:155px;background:var(--paper);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .dial-inner strong{font:700 29px var(--serif);color:var(--teal)}
+    .dial-inner span{font-size:11px;color:var(--muted);max-width:95px;line-height:1.3}
+    .scope{border-left:4px solid var(--gold);background:var(--gold-soft);padding:14px 17px;border-radius:4px;margin-top:16px;font-size:14px}
+    .status{display:flex;gap:9px;align-items:flex-start}
+    .status-mark{flex:none;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;background:var(--green-soft);color:var(--green);font:700 13px var(--mono)}
+    .status p{font-size:14px;margin:0;color:#36535a}
+    .status b{color:var(--ink)}
+    .list{display:grid;gap:11px}
+    .roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+    .roadmap .card{position:relative;padding:22px 18px}
+    .roadmap .number{font:700 22px var(--mono);color:var(--teal);margin-bottom:13px}
+    .roadmap p{font-size:13px;color:var(--muted);margin:0}
+    .roadmap .result{font-size:12px;color:var(--green);font-weight:700;margin-top:13px}
+    .warning{background:var(--red-soft);border:1px solid #e8c5c0;border-left:4px solid var(--red);border-radius:8px;padding:16px 18px;margin-top:16px;color:#783d37;font-size:14px}
+    .foot{font-size:12px;color:var(--muted);margin-top:42px;border-top:1px solid var(--line);padding-top:15px}
+    @media(max-width:1080px){.layout{grid-template-columns:1fr;padding:18px}.toc{position:sticky;top:0;z-index:10;display:flex;gap:4px;overflow:auto;white-space:nowrap;border-radius:0;padding:7px;box-shadow:0 4px 16px rgba(29,64,65,.08)}.toc strong{display:none}.toc a{flex:none}.hero{padding:32px}.roadmap{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.layout{padding:0 0 50px;gap:0}.toc{margin:0}.hero,main section,.foot{margin-left:14px;margin-right:14px}.hero{margin-top:14px;padding:24px}.grid,.grid.two,.legend,.kpi,.roadmap{grid-template-columns:1fr}.flow{padding:16px}.fork{grid-template-columns:1fr}.section-head{gap:10px}.dial{height:180px;width:180px}.dial-inner{height:139px;width:139px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    @media print{body{background:#fff}body::before,.toc{display:none}.layout{display:block;padding:0}.card,.hero,.flow{box-shadow:none}section{break-inside:avoid}a{color:inherit}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="Daftar isi">
+    <strong>Peta pembacaan</strong>
+    <a href="#ringkasan">Gambaran besar</a>
+    <a href="#odin">Odin singkat</a>
+    <a href="#berkas">Semua berkas</a>
+    <a href="#alur">Alur kerja</a>
+    <a href="#progres">Progres</a>
+    <a href="#langkah">Langkah berikutnya</a>
+  </nav>
+  <main>
+    <header class="hero" id="ringkasan">
+      <div class="eyebrow">Peta kode / GIM / graphics</div>
+      <h1>Temanmu sedang membangun lapisan grafis game engine.</h1>
+      <p class="lead">Folder <code>graphics/</code> adalah penghubung antara program game dan GPU modern. Kodenya menangani Vulkan, memori GPU, tekstur, shader, perintah gambar, serta presentasi ke layar. Program game yang memakai semua ini belum ada di folder tersebut.</p>
+      <div class="facts" aria-label="Fakta utama">
+        <div class="fact"><b>28</b> berkas Odin</div>
+        <div class="fact"><b>2</b> package: graphics dan graphics_allocator</div>
+        <div class="fact"><b>1</b> backend: Vulkan</div>
+        <div class="fact"><b>0</b> berkas <code>main</code> / gameplay yang terlihat</div>
+      </div>
+    </header>
+
+    <section id="odin">
+      <div class="section-head"><span class="section-num">01</span><h2>Odin dalam 60 detik</h2></div>
+      <div class="grid two">
+        <div class="code-card"><pre><code>package graphics
+
+create_device :: proc(desc: Device_Desc)
+    -&gt; (device: ^Device, err: Error) {
+    return _create_device(desc, context.allocator)
+}</code></pre></div>
+        <div class="card">
+          <p class="term"><b>package</b><span>Kumpulan file yang menyusun satu modul. Berkas dalam package yang sama saling melihat deklarasinya.</span></p>
+          <p class="term"><b>:: proc</b><span>Mendeklarasikan fungsi. <code>-&gt;</code> menunjukkan nilai yang dikembalikan.</span></p>
+          <p class="term"><b>^Device</b><span>Pointer ke sebuah <code>Device</code>; <code>[]byte</code> berarti irisan data byte.</span></p>
+          <p class="term"><b>_create_device</b><span>Nama dengan awalan garis bawah dipakai di sini untuk implementasi internal.</span></p>
+        </div>
+      </div>
+      <p class="note" style="margin-top:15px">Pola terpenting: file <code>device.odin</code> memberi fungsi yang dipakai aplikasi, lalu <code>device_vulkan.odin</code> mengerjakan pemanggilan Vulkan. Pola itu berulang untuk memori, tekstur, shader, perintah, dan swapchain. <code>#+build</code> memilih platform; <code>@(test)</code> menandai tes.</p>
+    </section>
+
+    <section id="berkas">
+      <div class="section-head"><span class="section-num">02</span><h2>Struktur file dan fungsi masing-masing</h2></div>
+      <p class="note">Nama di bawah relatif terhadap folder <code>graphics/</code>. “API” adalah pintu yang dipakai kode game atau renderer; “Vulkan” adalah mesin di baliknya.</p>
+
+      <div class="group-title">A · Pintu masuk API publik</div>
+      <div class="table-wrap"><table><thead><tr><th>Berkas</th><th>Jenis</th><th>Perannya</th></tr></thead><tbody>
+        <tr><td>doc.odin</td><td><span class="tag api">Panduan</span></td><td>Menjelaskan kontrak paket: GPU yang didukung, batasan, aturan umur resource, thread, dan mode jendela.</td></tr>
+        <tr><td>device.odin</td><td><span class="tag api">API</span></td><td>Membuat dan menghancurkan device GPU; membaca kemampuan, format, dan ukuran area gambar.</td></tr>
+        <tr><td>memory.odin</td><td><span class="tag api">API</span></td><td>Mendefinisikan alamat CPU/GPU, heap memori, jenis memori, dan titik selesai kerja GPU.</td></tr>
+        <tr><td>texture.odin</td><td><span class="tag api">API</span></td><td>Format dan ukuran tekstur; membuat tekstur, render view, serta menulis descriptor tekstur/sampler.</td></tr>
+        <tr><td>shader.odin</td><td><span class="tag api">API</span></td><td>Shader vertex/fragment/compute, status raster, blend, depth, dan attachment render.</td></tr>
+        <tr><td>commands.odin</td><td><span class="tag api">API</span></td><td>Merekam salin memori, barrier, render pass, draw, dispatch, perintah tidak langsung, dan submit.</td></tr>
+        <tr><td>swapchain.odin</td><td><span class="tag api">API</span></td><td>Mengambil gambar layar berikutnya dengan <code>acquire</code> dan menampilkannya dengan <code>submit_and_present</code>.</td></tr>
+      </tbody></table></div>
+
+      <div class="group-title">B · Implementasi Vulkan</div>
+      <div class="table-wrap"><table><thead><tr><th>Berkas</th><th>Jenis</th><th>Perannya</th></tr></thead><tbody>
+        <tr><td>loader_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Memuat pustaka Vulkan dari sistem operasi dan alamat fungsi yang diperlukan.</td></tr>
+        <tr><td>device_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Membuat instance/device, memilih GPU dan queue, memeriksa fitur/ekstensi wajib, serta melepasnya.</td></tr>
+        <tr><td>memory_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Mengalokasikan memori GPU dan backing buffer; memetakan alamat CPU dan GPU.</td></tr>
+        <tr><td>texture_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Membuat image dan view Vulkan, mengikatnya ke heap, serta menulis descriptor.</td></tr>
+        <tr><td>shader_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Membuat shader object dari SPIR-V dan mengubah state grafis menjadi perintah Vulkan.</td></tr>
+        <tr><td>commands_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Membuat command buffer, merekam draw/compute/copy, lalu submit dan sinkronisasi timeline.</td></tr>
+        <tr><td>swapchain_vulkan.odin</td><td><span class="tag impl">Vulkan</span></td><td>Mengatur gambar jendela, resize, acquire, present, dan resource swapchain lama.</td></tr>
+      </tbody></table></div>
+
+      <div class="group-title">C · Penghubung platform dan bantuan bersama</div>
+      <div class="table-wrap"><table><thead><tr><th>Berkas</th><th>Jenis</th><th>Perannya</th></tr></thead><tbody>
+        <tr><td>surface_glfw.odin</td><td><span class="tag support">Platform</span></td><td>Menghubungkan jendela GLFW ke Vulkan dan membaca ukuran framebuffer.</td></tr>
+        <tr><td>surface_windows.odin</td><td><span class="tag support">Platform</span></td><td>Memilih jalur GLFW pada Windows; tanpa GLFW hanya device tanpa jendela.</td></tr>
+        <tr><td>surface_linux.odin</td><td><span class="tag support">Platform</span></td><td>Memilih jalur GLFW pada Linux; tanpa GLFW hanya device tanpa jendela.</td></tr>
+        <tr><td>impl_shared.odin</td><td><span class="tag support">Bantuan</span></td><td>Fungsi kecil bersama untuk alignment, kecocokan format view, dan area salin tekstur.</td></tr>
+      </tbody></table></div>
+
+      <div class="group-title">D · Pembagi memori GPU: folder allocator/</div>
+      <div class="table-wrap"><table><thead><tr><th>Berkas</th><th>Jenis</th><th>Perannya</th></tr></thead><tbody>
+        <tr><td>allocator/doc.odin</td><td><span class="tag support">Panduan</span></td><td>Menjelaskan aturan subalokasi dan kapan memori aman dipakai ulang sesudah GPU selesai.</td></tr>
+        <tr><td>allocator/bump.odin</td><td><span class="tag support">Allocator</span></td><td>Membagi memori berurutan untuk data sementara per frame; dapat di-reset sekaligus.</td></tr>
+        <tr><td>allocator/range.odin</td><td><span class="tag support">Allocator</span></td><td>Mencari rentang kosong, memberi token, lalu menggabungkan rentang saat dibebaskan.</td></tr>
+        <tr><td>allocator/heap.odin</td><td><span class="tag support">Allocator</span></td><td>Mengubah offset dari range allocator menjadi pasangan alamat CPU/GPU bertipe.</td></tr>
+        <tr><td>allocator/texture.odin</td><td><span class="tag support">Allocator</span></td><td>Menempatkan tekstur pada lokasi dan alignment yang benar di texture heap.</td></tr>
+        <tr><td>allocator/delete_queue.odin</td><td><span class="tag support">Allocator</span></td><td>Menunda penghancuran resource sampai nilai timeline GPU menunjukkan aman.</td></tr>
+      </tbody></table></div>
+
+      <div class="group-title">E · Tes yang tersedia</div>
+      <div class="table-wrap"><table><thead><tr><th>Berkas</th><th>Jenis</th><th>Perannya</th></tr></thead><tbody>
+        <tr><td>api_test.odin</td><td><span class="tag test">Tes</span></td><td>Memeriksa bentuk tipe, nilai enum, format tekstur, default, dan kontrak API kecil.</td></tr>
+        <tr><td>command_context_test.odin</td><td><span class="tag test">Tes GPU</span></td><td>Menguji heap, descriptor, timeline, timestamp, command buffer, dan tekstur bila GPU mendukung.</td></tr>
+        <tr><td>allocator/allocator_test.odin</td><td><span class="tag test">Tes</span></td><td>Menguji alokasi, kehabisan ruang, reuse, fragmentasi, bump, dan delete queue.</td></tr>
+        <tr><td>allocator/placed_texture_test.odin</td><td><span class="tag test">Tes GPU</span></td><td>Menguji penempatan dan daur ulang tekstur pada texture heap.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="alur">
+      <div class="section-head"><span class="section-num">03</span><h2>Kode dimulai dari mana?</h2></div>
+      <p class="note">Tidak ada <code>main</code> di folder ini. Alur berikut menunjukkan bagaimana <em>aplikasi pemanggil</em> nantinya menggunakan package <code>graphics</code>. Jadi kotak pertama dan sebagian langkah menyiapkan resource adalah pekerjaan aplikasi di luar folder ini.</p>
+      <figure class="flow" role="img" aria-label="Flowchart dari aplikasi pemanggil, membuat Vulkan device, menyiapkan resource, merekam perintah, submit ke GPU, lalu present dan mengulang frame">
+        <figcaption>Alur satu frame: pintu API publik memanggil implementasi Vulkan di belakangnya.</figcaption>
+        <div class="flow-step external"><b>0 · Program game memulai</b><small><code>main</code>, jendela, input, dan game loop belum ada di folder <code>graphics/</code>.</small></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step"><b>1 · <code>create_device()</code></b><small><code>device.odin</code> → <code>loader_vulkan.odin</code> dan <code>device_vulkan.odin</code>: muat Vulkan, pilih GPU, periksa fitur wajib.</small></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step"><b>2 · Siapkan resource</b><small>Heap dan allocator, tekstur, descriptor, shader SPIR-V, serta timeline. Kode pembuatnya tersedia; isi scene dan shader sumber datang dari aplikasi.</small></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="fork" aria-label="Cabang mode jendela"><div class="branch"><b>Jika memakai jendela</b><code>acquire()</code> mengambil frame swapchain. Bila jendela mengecil atau frame belum siap, hasil bisa kosong dan aplikasi mencoba lagi.</div><div class="branch"><b>Jika tanpa jendela</b>Lewati acquire. Perintah komputasi atau render di luar layar tetap dapat direkam.</div></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step"><b>3 · <code>begin_commands()</code></b><small>Mulai command buffer. Implementasi juga menyiapkan transisi awal tekstur dan frame swapchain yang baru diambil.</small></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step"><b>4 · Rekam pekerjaan GPU</b><small>Contoh: salin data, tulis descriptor, <code>begin_render_pass()</code>, ikat shader, <code>draw()</code> atau <code>dispatch()</code>, lalu akhiri render pass.</small></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="fork" aria-label="Cabang pengiriman"><div class="branch"><b>Frame untuk layar</b><code>submit_and_present()</code> mengirim perintah dan menampilkan gambar.</div><div class="branch"><b>Tanpa presentasi</b><code>submit()</code> mengirim perintah saja, misalnya untuk komputasi.</div></div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step gpu"><b>5 · GPU bekerja; timeline menandai selesai</b><small>Aplikasi bisa memeriksa atau menunggu nilai timeline sebelum memakai ulang memori atau menghancurkan resource.</small></div>
+        <div class="loop">↻ Frame berikutnya kembali ke acquire / begin_commands</div>
+        <div class="arrow" aria-hidden="true">↓</div>
+        <div class="flow-step finish"><b>6 · Saat keluar: tunggu lalu bersihkan</b><small><code>wait_idle()</code>, bebaskan resource yang masih hidup, lalu <code>destroy_device()</code>.</small></div>
+      </figure>
+      <div class="legend">
+        <div class="card"><b>CPU</b><br><span class="mini">Merekam instruksi dan menyiapkan data.</span></div>
+        <div class="card"><b>GPU</b><br><span class="mini">Menjalankan instruksi tersebut.</span></div>
+        <div class="card"><b>Swapchain</b><br><span class="mini">Antrian gambar yang akhirnya terlihat di jendela.</span></div>
+      </div>
+    </section>
+
+    <section id="progres">
+      <div class="section-head"><span class="section-num">04</span><h2>Apakah ini sudah game engine? Seberapa jauh?</h2></div>
+      <div class="kpi">
+        <div class="dial" aria-label="Perkiraan kasar 10 sampai 20 persen dari engine 3D minimal"><div class="dial-inner"><strong>10–20%</strong><span>perkiraan cakupan engine minimal</span></div></div>
+        <div><h3>Ya, bagian grafis engine sudah dimulai.</h3>
+          <p>Ini fondasi <em>rendering backend</em>, bagian yang berbicara langsung dengan GPU. Angka 10–20% adalah tebakan kasar untuk <strong>engine 3D kecil yang dibuat untuk satu game</strong>, berdasarkan cakupan sistem yang tampak. Ini bukan ukuran jam kerja, kualitas, atau “persen game jadi”.</p>
+          <p>Untuk <strong>game lengkap beserta engine</strong>, progresnya kemungkinan masih di bawah 5% karena gameplay, konten, dan integrasi belum tampak.</p>
+          <div class="scope"><b>Mengapa rentangnya lebar?</b> Engine untuk game 2D sederhana, simulasi 3D, dan game dengan editor lengkap membutuhkan sistem berbeda. Backend Vulkan ini cukup besar secara teknis, tetapi belum ada bukti bahwa ia sudah menggambar satu frame permainan dari awal sampai akhir.</div>
+        </div>
+      </div>
+      <div class="grid two" style="margin-top:15px">
+        <div class="card"><h3>Yang sudah dikerjakan di folder ini</h3><div class="list">
+          <div class="status"><span class="status-mark">✓</span><p><b>Kerangka API grafis</b> dengan implementasi Vulkan untuk Windows dan Linux.</p></div>
+          <div class="status"><span class="status-mark">✓</span><p><b>Pemilihan GPU dan fitur wajib</b> saat membuat device.</p></div>
+          <div class="status"><span class="status-mark">✓</span><p><b>Heap memori, alamat GPU, dan allocator</b> untuk data sementara dan tekstur.</p></div>
+          <div class="status"><span class="status-mark">✓</span><p><b>Tekstur, descriptor, sampler, shader object</b>, dan pengaturan render dasar.</p></div>
+          <div class="status"><span class="status-mark">✓</span><p><b>Command buffer, draw, compute, sinkronisasi</b>, serta presentasi swapchain.</p></div>
+          <div class="status"><span class="status-mark">✓</span><p><b>Tes unit dan beberapa tes GPU</b> untuk komponen fondasi.</p></div>
+        </div></div>
+        <div class="card"><h3>Yang belum terlihat di kode ini</h3><div class="list">
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Aplikasi <code>main</code>, pembuatan jendela, input, dan game loop</b> yang memanggil API ini.</p></div>
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Shader sumber dan renderer adegan</b>: kamera, mesh/sprite, material, pencahayaan.</p></div>
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Pemuatan dan pengolahan aset</b>: model, gambar, suara, dan paket data.</p></div>
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Scene atau world, aturan gameplay</b>, serta sistem spesifik game.</p></div>
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Audio, fisika, animasi, UI, alat kerja</b> bila game memang memerlukannya.</p></div>
+          <div class="status"><span class="status-mark" style="background:var(--gold-soft);color:var(--gold)">·</span><p><b>Bukti demo frame ke layar</b> dan uji berjalan lintas GPU/driver.</p></div>
+        </div></div>
+      </div>
+      <div class="warning"><b>Batas verifikasi:</b> saya meninjau sumber, tetapi tidak menjalankan program karena perintah <code>odin</code> tidak tersedia di lingkungan ini. Tes GPU dalam kode melewati pengujian bila perangkat dinilai tidak mendukung. Jadi “ada tes” belum sama dengan “sudah terbukti tampil di layar”.</div>
+    </section>
+
+    <section id="langkah">
+      <div class="section-head"><span class="section-num">05</span><h2>Langkah berikutnya yang paling masuk akal</h2></div>
+      <div class="roadmap">
+        <div class="card"><div class="number">01</div><h3>Tentukan satu target game</h3><p>Pilih jenis game dan satu adegan kecil sebagai sasaran. Itu menentukan renderer dan fitur engine yang benar-benar diperlukan.</p><div class="result">Hasil: definisi vertical slice.</div></div>
+        <div class="card"><div class="number">02</div><h3>Buktikan frame pertama</h3><p>Siapkan Odin dan driver yang memenuhi syarat, jalankan tes, lalu buat program kecil yang membuka jendela dan menggambar segitiga atau warna.</p><div class="result">Hasil: frame tampil tanpa error validasi.</div></div>
+        <div class="card"><div class="number">03</div><h3>Bangun renderer sesuai game</h3><p>Tambahkan shader sumber, kamera, geometri atau sprite, tekstur, material, serta pemuatan aset yang diperlukan adegan tadi.</p><div class="result">Hasil: satu scene dapat dirender berulang.</div></div>
+        <div class="card"><div class="number">04</div><h3>Jadikan permainan</h3><p>Masukkan input, aturan gameplay, world/scene, lalu audio, fisika, animasi, UI, dan tooling hanya jika dibutuhkan game.</p><div class="result">Hasil: vertical slice yang bisa dimainkan.</div></div>
+      </div>
+      <p class="note" style="margin-top:17px">Prioritas utamanya adalah langkah 02: satu demo kecil yang berhasil berjalan akan menguji sambungan nyata antara API grafis ini, shader, jendela, driver, dan perangkat GPU.</p>
+    </section>
+    <footer class="foot">Disusun dari isi folder <code>graphics/</code> pada 27 September 2026. Ini pembacaan arsitektur kode, bukan audit performa atau klaim bahwa seluruh fitur sudah teruji.</footer>
+  </main>
+</div>
+</body>
+</html>
+
